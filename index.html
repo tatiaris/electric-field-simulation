@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>Electric Field</title>
+        <link rel="stylesheet" href="http://3dlist.xyz/rishabh/libraries/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var scl = 75;
+            var cols;
+            var rows;
+            var n;
+            var p;
+            var red;
+            var power;
+
+            function setup() {
+              createCanvas(innerWidth, innerHeight);
+              cols = floor(height / scl);
+              rows = floor(width / scl);
+              power = 0;
+            }
+
+            function draw() {
+              createCanvas(innerWidth, innerHeight);
+              background(0);
+              strokeWeight(7);
+              for (var i = 1; i < rows; i++){
+                for(var j = 1; j < cols; j++){
+                  var x = i * scl;
+                  var y = j * scl;
+                  var r = dist(x, y, mouseX, mouseY);
+                  stroke(255 - r/Math.abs(power));
+                  var d = 20;
+                  if(power < 0){
+                    if(mouseX > x)  var theta = -Math.acos((mouseY - y)/r) + PI/2;
+                    if(mouseX <= x)  var theta = Math.acos((mouseY - y)/r) + PI/2;
+                  }else if(power > 0){
+                    if(mouseX > x)  var theta = -Math.acos((mouseY - y)/r) - PI/2;
+                    if(mouseX <= x)  var theta = Math.acos((mouseY - y)/r) - PI/2;
+                  }else{
+                    if(mouseX > x)  var theta = -Math.acos((mouseY - y)/r) - PI/2;
+                    if(mouseX <= x)  var theta = Math.acos((mouseY - y)/r) - PI/2;
+                    stroke(0);
+                  }
+                  var x1 = x + d*cos(theta);
+                  var y1 = y + d*sin(theta);
+                  line(x, y, x1, y1);
+                  if (power != 0) stroke(255 - (r/Math.abs(power)), 0, 0);
+                  else stroke(0, 255 - r/3, 0);
+                  if (power != 0) ellipse(x1, y1, 2);
+                  else{
+                    radius = 2*50/Math.sqrt(r);
+                    radius = constrain(radius, 0, 10)
+                    ellipse(x1, y1, radius);
+                  }
+                }
+              }
+              if (power < 0)  stroke(0, 0, 255);
+              else if(power > 0) stroke(255, 0, 0);
+              else stroke(0);
+              ellipse(mouseX, mouseY, 10);
+            }
+
+            function keyPressed() {
+              if(keyCode == 187){
+                power++;
+              }
+              if(keyCode == 189){
+                power--;
+              }
+              if (keyCode == 70){ // full screen mode
+                var fs = fullscreen();
+                fullscreen(!fs);
+              }
+            }
+        </script>
+    </body>
+</html>
